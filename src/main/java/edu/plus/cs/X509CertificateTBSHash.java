@@ -26,7 +26,7 @@ public class X509CertificateTBSHash {
 
             byte[] subjectHash = generateTBSHash(certificate, outputFile);
             String subjectHashHex = bytesToHex(subjectHash);
-            System.out.println("Subject Hash Cert1: " + subjectHashHex);
+            System.out.println("TBS Hash Cert: " + subjectHashHex);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException | CertificateException e) {
