@@ -8,7 +8,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-public class X509CertificateSubjectHash {
+public class X509CertificateTBSHash {
 
     public static void main(String[] args) {
         String certificateFile1 = "src/main/resources/TargetCollidingCertificate1.cer";
@@ -16,15 +16,15 @@ public class X509CertificateSubjectHash {
         String outputFile1 = "src/main/resources/outputHashCert1.txt";
         String outputFile2 = "src/main/resources/outputHashCert2.txt";
 
-        calculateSubjectHash(certificateFile1, outputFile1);
-        calculateSubjectHash(certificateFile2, outputFile2);
+        calculateTBSHash(certificateFile1, outputFile1);
+        calculateTBSHash(certificateFile2, outputFile2);
     }
 
-    private static void calculateSubjectHash(String certificateFile, String outputFile) {
+    private static void calculateTBSHash(String certificateFile, String outputFile) {
         try (FileInputStream fis = new FileInputStream(certificateFile)) {
             X509Certificate certificate = loadCertificate(fis);
 
-            byte[] subjectHash = generateSubjectHash(certificate, outputFile);
+            byte[] subjectHash = generateTBSHash(certificate, outputFile);
             String subjectHashHex = bytesToHex(subjectHash);
             System.out.println("Subject Hash Cert1: " + subjectHashHex);
         } catch (FileNotFoundException e) {
@@ -39,10 +39,10 @@ public class X509CertificateSubjectHash {
         return (X509Certificate) cf.generateCertificate(fis);
     }
 
-    public static byte[] generateSubjectHash(X509Certificate certificate, String outputFile)
+    public static byte[] generateTBSHash(X509Certificate certificate, String outputFile)
             throws CertificateEncodingException, IOException {
-        byte[] encodedSubject = certificate.getTBSCertificate();
-        return MD5Hash.computeMD5(encodedSubject, outputFile);
+        byte[] encodedToBeSignedPart = certificate.getTBSCertificate();
+        return MD5Hash.computeMD5(encodedToBeSignedPart, outputFile);
     }
 
     public static String bytesToHex(byte[] bytes) {

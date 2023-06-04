@@ -27,6 +27,7 @@ public class MD5Hash {
     public static byte[] computeMD5(byte[] message, String outputFile) throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
 
+        // set padding
         int messageLenBytes = message.length;
         int numBlocks = ((messageLenBytes + 8) >>> 6) + 1;
         int totalLen = numBlocks << 6;
@@ -39,11 +40,14 @@ public class MD5Hash {
             messageLenBits >>>= 8;
         }
 
+        // set initial values
         int a = INIT_A;
         int b = INIT_B;
         int c = INIT_C;
         int d = INIT_D;
         int[] buffer = new int[16];
+
+        // perform rounds
         for (int i = 0; i < numBlocks; i++) {
             int index = i << 6;
             for (int j = 0; j < 64; j++, index++)
