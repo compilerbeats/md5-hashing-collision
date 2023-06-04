@@ -1,0 +1,17 @@
+To get a human-readable view of the contents of the certificates:
+        
+    openssl x509 -in TargetCollidingCertificate1.cer -inform DER -text
+    openssl x509 -in TargetCollidingCertificate2.cer -inform DER -text
+        
+To verify the signature on the two certificates against the CA certificate, 
+first convert the certificates to PEM-format
+("openssl verify" does not work with the DER format):
+        
+    openssl x509 -in TargetCollidingCertificate1.cer -inform DER -out TargetCollidingCertificate1.pem
+    openssl x509 -in TargetCollidingCertificate2.cer -inform DER -out TargetCollidingCertificate2.pem
+    openssl x509 -in MD5CollisionCA.cer -inform DER -out MD5CollisionCA.pem
+        
+and then do the verification:
+        
+    openssl verify -CAfile MD5CollisionCA.pem TargetCollidingCertificate1.pem
+    openssl verify -CAfile MD5CollisionCA.pem TargetCollidingCertificate2.pem
